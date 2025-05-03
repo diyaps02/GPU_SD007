@@ -3,75 +3,22 @@ import React from "react";
 import { useState } from "react";
 import WorkloadForm from "./components/WorkLoadForm";
 import GpuRecommendations from "./components/GpuRecommendations";
+import axios from "axios";
 
-// Updated fetch function to handle backend data format
+// Updated fetch function to make actual API calls to the backend
 const fetchRecommendations = async (formData) => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-
-  // Example of real backend data format based on what was provided
-  return [
-    {
-      country: "usa",
-      operating_system: "windows",
-      resource_class: "a100",
-      resource_name: "W.N.A100.96",
-      vcpus: 16,
-      ram: 96,
-      price_per_hour: 224.66,
-      price_per_month: 102500,
-      price_per_spot: 157.262,
-      currency: "INR",
-      is_gpu: 1,
-      is_spot: 0,
-      resource: "instances",
-      resource_type: "gpu",
-      region: "atlanta",
-      flavor_id: "00cc2a6e-80b3-4277-b6da-f825dcc4d111",
-      gpu_description: "1x A100-80GB",
-      is_public: 1,
-    },
-    {
-      country: "usa",
-      operating_system: "windows",
-      resource_class: "t4",
-      resource_name: "W.N.T4.16",
-      vcpus: 4,
-      ram: 16,
-      price_per_hour: 89.6,
-      price_per_month: 42100,
-      price_per_spot: 58.24,
-      currency: "INR",
-      is_gpu: 1,
-      is_spot: 0,
-      resource: "instances",
-      resource_type: "gpu",
-      region: "atlanta",
-      flavor_id: "9c5e95bc-ab3d-4b13-9d58-f1c2fa7f9cb3",
-      gpu_description: "1x T4-16GB",
-      is_public: 1,
-    },
-    {
-      country: "usa",
-      operating_system: "linux",
-      resource_class: "a6000",
-      resource_name: "L.N.A6000.48",
-      vcpus: 8,
-      ram: 32,
-      price_per_hour: 160.2,
-      price_per_month: 75000,
-      price_per_spot: 112.14,
-      currency: "INR",
-      is_gpu: 1,
-      is_spot: 0,
-      resource: "instances",
-      resource_type: "gpu",
-      region: "new york",
-      flavor_id: "d4f095d8-7a5e-4cf2-b269-dbf3c7a9b8a7",
-      gpu_description: "1x A6000-48GB",
-      is_public: 1,
-    },
-  ];
+  try {
+    // console.log(formData);
+    const response = await axios.post(
+      "http://localhost:3000/recommend-gpu",
+      formData
+    );
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching recommendations:", error);
+    throw error;
+  }
 };
 
 export default function App() {
@@ -93,6 +40,7 @@ export default function App() {
     } catch (error) {
       console.error("Error fetching recommendations:", error);
       // Handle error state here
+      setRecommendations([]); // Set empty array on error
     } finally {
       setIsLoading(false);
     }

@@ -1,17 +1,19 @@
+"use client";
+import React from "react";
 import GpuCard from "./GpuCard";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function GpuRecommendations({
   recommendations,
   isLoading,
   pricingPreference,
-  searchCriteria, // Add searchCriteria prop to access user's form data
+  searchCriteria,
 }) {
   const [scoredRecommendations, setScoredRecommendations] = useState([]);
   const [showScoringDetails, setShowScoringDetails] = useState(false);
   const [noExactMatch, setNoExactMatch] = useState(false);
 
-  // Calculate scores for each GPU based on criteria from the image
+  // Calculate scores for each GPU based on criteria
   useEffect(() => {
     if (recommendations && recommendations.length > 0) {
       // Flag to check if we have any good matches
@@ -34,7 +36,7 @@ export default function GpuRecommendations({
           // Try to extract numbers from the description that might represent VRAM
           const vramMatch = gpu.gpu_description.match(/(\d+)GB/i);
           if (vramMatch) {
-            vramSize = parseInt(vramMatch[1], 10);
+            vramSize = Number.parseInt(vramMatch[1], 10);
           }
         }
 
@@ -60,7 +62,10 @@ export default function GpuRecommendations({
         // Larger datasets need more VRAM
         if (searchCriteria?.dataset_size === "large" && vramSize >= 40) {
           scoring.datasetSize = 2;
-        } else if (searchCriteria?.dataset_size === "medium" && vramSize >= 16) {
+        } else if (
+          searchCriteria?.dataset_size === "medium" &&
+          vramSize >= 16
+        ) {
           scoring.datasetSize = 2;
         } else if (searchCriteria?.dataset_size === "small" && gpu.is_gpu) {
           scoring.datasetSize = 2; // Even smaller GPUs are fine for small datasets
@@ -78,7 +83,8 @@ export default function GpuRecommendations({
           }
         } else if (searchCriteria?.workload_type === "inference") {
           // For inference, cost is more important than raw power
-          if (gpu.is_gpu && gpu.price_per_hour < 100) {
+          if (gpu.is_gpu && gpu.price_per_hour < 10000) {
+            // 100 dollars in cents
             scoring.workloadType = 2; // Cost-effective option
           } else if (gpu.is_gpu) {
             scoring.workloadType = 1; // At least it's a GPU
@@ -94,7 +100,8 @@ export default function GpuRecommendations({
           const priceField =
             budgetType === "hourly" ? "price_per_hour" : "price_per_month";
           const minBudget = searchCriteria.budget[budgetType]?.min || 0;
-          const maxBudget = searchCriteria.budget[budgetType]?.max || Infinity;
+          const maxBudget =
+            searchCriteria.budget[budgetType]?.max || Number.POSITIVE_INFINITY;
 
           // Convert backend prices (they're in cents or INR)
           const price = gpu[priceField] / 100;
@@ -110,8 +117,12 @@ export default function GpuRecommendations({
 
         // Region Match score (weight +1)
         if (searchCriteria?.region && gpu.region) {
-          if (gpu.region.toLowerCase() === searchCriteria.region.toLowerCase()) {
-            scoring.regionMatch = 1; // Exact region match
+          if (
+            gpu.region
+              .toLowerCase()
+              .includes(searchCriteria.region.toLowerCase())
+          ) {
+            scoring.regionMatch = 1; // Region match
           }
         }
 
@@ -142,6 +153,8 @@ export default function GpuRecommendations({
       setNoExactMatch(!hasGoodMatches);
 
       setScoredRecommendations(scored);
+    } else {
+      setScoredRecommendations([]);
     }
   }, [recommendations, searchCriteria]);
 
@@ -258,36 +271,7 @@ export default function GpuRecommendations({
             <div className="absolute -top-3 -right-3 bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold z-10 border-2 border-white shadow-md">
               {gpu.score}
             </div>
-            <GpuCard
-              gpu={{
-                name: gpu.gpu_description || gpu.resource_name || "GPU Instance",
-                manufacturer: gpu.is_gpu ? "NVIDIA" : "CPU Instance",
-                availability: "Available",
-                specs: {
-                  vCPUs: gpu.vcpus || "N/A",
-                  ram: `${gpu.ram || 0} GB`,
-                  gpuMemory: gpu.gpu_description
-                    ? gpu.gpu_description.includes("-")
-                      ? gpu.gpu_description.split("-")[1]
-                      : gpu.gpu_description
-                    : "N/A",
-                  performance: gpu.is_gpu ? "High" : "Standard",
-                },
-                description: `${gpu.region || "Unknown Region"} - ${
-                  gpu.resource_class || "Standard"
-                } class GPU instance`,
-                pricing: {
-                  onDemand: parseFloat(
-                    (gpu.price_per_hour || 0) / 100
-                  ).toFixed(2),
-                  spot: parseFloat((gpu.price_per_spot || 0) / 100).toFixed(2),
-                  monthly: parseFloat(
-                    (gpu.price_per_month || 0) / 100
-                  ).toFixed(2),
-                },
-              }}
-              pricingPreference={pricingPreference}
-            />
+            <GpuCard gpu={gpu} pricingPreference={pricingPreference} />
           </div>
         ))}
       </div>

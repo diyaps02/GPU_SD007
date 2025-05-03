@@ -1,8 +1,5 @@
 "use client";
-import React from "react";
-import { useState, useEffect } from "react";
-import countries from "../utils/countries";
-import taskTypes from "../utils/taskType";
+import React, { useState, useEffect } from "react";
 
 export default function WorkloadForm({ onSubmit }) {
   const [formData, setFormData] = useState({
@@ -40,6 +37,14 @@ export default function WorkloadForm({ onSubmit }) {
     // Data Processing specific fields
     parallel_workload: "moderate",
   });
+
+  // Available regions for selection
+  const availableRegions = [
+    { name: "Delhi", code: "ap-south-del-1" },
+    { name: "Atlanta", code: "us-east-at-1" },
+    { name: "Noida", code: "ap-south-noi-1" },
+    { name: "Mumbai", code: "ap-south-mum-1" },
+  ];
 
   // Handle task type change to set default values
   useEffect(() => {
@@ -96,10 +101,9 @@ export default function WorkloadForm({ onSubmit }) {
       return;
     }
 
-    // Handle nested budget fields
-    if (name === "minBudget" || name === "maxBudget") {
+    // Handle budget field (only need max value for backend)
+    if (name === "maxBudget") {
       const budgetType = formData.pricing;
-      const budgetField = name === "minBudget" ? "min" : "max";
 
       setFormData((prevData) => ({
         ...prevData,
@@ -107,7 +111,24 @@ export default function WorkloadForm({ onSubmit }) {
           ...prevData.budget,
           [budgetType]: {
             ...prevData.budget[budgetType],
-            [budgetField]: value,
+            max: value,
+          },
+        },
+      }));
+      return;
+    }
+
+    // Keep min budget for UI validation only, won't be sent to backend
+    if (name === "minBudget") {
+      const budgetType = formData.pricing;
+
+      setFormData((prevData) => ({
+        ...prevData,
+        budget: {
+          ...prevData.budget,
+          [budgetType]: {
+            ...prevData.budget[budgetType],
+            min: value,
           },
         },
       }));
@@ -139,16 +160,18 @@ export default function WorkloadForm({ onSubmit }) {
       return;
     }
 
-    // Prepare data based on task type
+    // Find the region code for the selected region
+    const selectedRegion = availableRegions.find(
+      (r) => r.name.toLowerCase() === formData.region.toLowerCase()
+    );
+    const regionCode = selectedRegion ? selectedRegion.code : formData.region;
+
+    // Prepare data based on task type with flattened budget
     let submissionData = {
       use_case: getUseCase(formData.taskType),
-      budget: {
-        [budgetType]: {
-          min: minBudget,
-          max: maxBudget,
-        },
-      },
-      region: formData.region,
+      // Instead of nested budget object, directly use budgetType as key
+      [budgetType]: maxBudget, // This is what you want: hourly: value or monthly: value
+      region: regionCode,
       operating_system: formData.operating_system,
       workload_type: formData.workloadType,
     };
@@ -592,9 +615,9 @@ export default function WorkloadForm({ onSubmit }) {
               <option value="" disabled>
                 Select a region
               </option>
-              {countries.map((country) => (
-                <option key={country} value={country.toLowerCase()}>
-                  {country}
+              {availableRegions.map((region) => (
+                <option key={region.code} value={region.name}>
+                  {region.name}
                 </option>
               ))}
             </select>

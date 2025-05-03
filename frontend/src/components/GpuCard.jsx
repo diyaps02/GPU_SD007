@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { useState, useEffect } from "react";
 
 export default function GpuCard({ gpu, pricingPreference }) {
@@ -14,40 +13,72 @@ export default function GpuCard({ gpu, pricingPreference }) {
     }
   }, [pricingPreference]);
 
+  // Format price from cents/INR to dollars with 2 decimal places
+  const formatPrice = (price) => {
+    if (!price) return "0.00";
+    return (price / 100).toFixed(2);
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
       <div className="p-5">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="text-xl font-bold text-gray-800">{gpu.name}</h3>
-            <p className="text-sm text-gray-500">{gpu.manufacturer}</p>
+            <h3 className="text-xl font-bold text-gray-800">
+              {gpu.gpu_description || gpu.resource_name || "GPU Instance"}
+            </h3>
+            <p className="text-sm text-gray-500">
+              {gpu.resource_class
+                ? `Class: ${gpu.resource_class.toUpperCase()}`
+                : "NVIDIA"}
+            </p>
           </div>
           <div className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-            {gpu.availability}
+            {gpu.is_public ? "Available" : "Limited Access"}
           </div>
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div className="bg-gray-50 p-2 rounded">
             <p className="text-xs text-gray-500">vCPUs</p>
-            <p className="font-semibold">{gpu.specs.vCPUs}</p>
+            <p className="font-semibold">{gpu.vcpus || "N/A"}</p>
           </div>
           <div className="bg-gray-50 p-2 rounded">
             <p className="text-xs text-gray-500">RAM</p>
-            <p className="font-semibold">{gpu.specs.ram}</p>
+            <p className="font-semibold">{gpu.ram ? `${gpu.ram} GB` : "N/A"}</p>
           </div>
           <div className="bg-gray-50 p-2 rounded">
             <p className="text-xs text-gray-500">GPU Memory</p>
-            <p className="font-semibold">{gpu.specs.gpuMemory}</p>
+            <p className="font-semibold">
+              {gpu.gpu_description
+                ? gpu.gpu_description.includes("-")
+                  ? gpu.gpu_description.split("-")[1]
+                  : gpu.gpu_description
+                : "N/A"}
+            </p>
           </div>
           <div className="bg-gray-50 p-2 rounded">
-            <p className="text-xs text-gray-500">Performance</p>
-            <p className="font-semibold">{gpu.specs.performance}</p>
+            <p className="text-xs text-gray-500">Region</p>
+            <p className="font-semibold">
+              {gpu.region
+                ? gpu.region.charAt(0).toUpperCase() + gpu.region.slice(1)
+                : "N/A"}
+            </p>
           </div>
         </div>
 
         <div className="mt-4">
-          <p className="text-sm text-gray-600">{gpu.description}</p>
+          <p className="text-sm text-gray-600">
+            {`${
+              gpu.operating_system
+                ? gpu.operating_system.charAt(0).toUpperCase() +
+                  gpu.operating_system.slice(1)
+                : "Linux"
+            } 
+            instance with ${gpu.gpu_description || "GPU"} in ${
+              gpu.region || "Unknown"
+            } region.`}
+          </p>
         </div>
 
         <div className="mt-4">
@@ -89,11 +120,11 @@ export default function GpuCard({ gpu, pricingPreference }) {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-2xl font-bold text-gray-800">
-                    ${gpu.pricing.onDemand}/hr
+                    ${formatPrice(gpu.price_per_hour)}/hr
                   </p>
                 </div>
                 <div className="text-sm text-gray-500">
-                  Est. ${(gpu.pricing.onDemand * 24).toFixed(2)}/day
+                  Est. ${formatPrice(gpu.price_per_hour * 24)}/day
                 </div>
               </div>
             )}
@@ -102,18 +133,20 @@ export default function GpuCard({ gpu, pricingPreference }) {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-2xl font-bold text-gray-800">
-                    ${gpu.pricing.spot}/hr
+                    ${formatPrice(gpu.price_per_spot)}/hr
                   </p>
-                  <p className="text-xs text-green-600">
-                    Save{" "}
-                    {Math.round(
-                      (1 - gpu.pricing.spot / gpu.pricing.onDemand) * 100
-                    )}
-                    %
-                  </p>
+                  {gpu.price_per_spot && gpu.price_per_hour && (
+                    <p className="text-xs text-green-600">
+                      Save{" "}
+                      {Math.round(
+                        (1 - gpu.price_per_spot / gpu.price_per_hour) * 100
+                      )}
+                      %
+                    </p>
+                  )}
                 </div>
                 <div className="text-sm text-gray-500">
-                  Est. ${(gpu.pricing.spot * 24).toFixed(2)}/day
+                  Est. ${formatPrice(gpu.price_per_spot * 24)}/day
                 </div>
               </div>
             )}
@@ -122,18 +155,20 @@ export default function GpuCard({ gpu, pricingPreference }) {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-2xl font-bold text-gray-800">
-                    ${gpu.pricing.monthly}/mo
+                    ${formatPrice(gpu.price_per_month)}/mo
                   </p>
-                  <p className="text-xs text-green-600">
-                    Save{" "}
-                    {Math.round(
-                      (1 -
-                        gpu.pricing.monthly /
-                          (gpu.pricing.onDemand * 24 * 30)) *
-                        100
-                    )}
-                    %
-                  </p>
+                  {gpu.price_per_month && gpu.price_per_hour && (
+                    <p className="text-xs text-green-600">
+                      Save{" "}
+                      {Math.round(
+                        (1 -
+                          gpu.price_per_month /
+                            (gpu.price_per_hour * 24 * 30)) *
+                          100
+                      )}
+                      %
+                    </p>
+                  )}
                 </div>
                 <div className="text-sm text-gray-500">Reserved capacity</div>
               </div>
@@ -143,7 +178,7 @@ export default function GpuCard({ gpu, pricingPreference }) {
       </div>
 
       <div className="px-5 py-4 bg-gray-50 border-t border-gray-200">
-        {gpu.availability === "Available" ? (
+        {gpu.is_public ? (
           <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-150 ease-in-out">
             Deploy Now
           </button>
