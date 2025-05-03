@@ -12,6 +12,7 @@ export default function WorkloadForm({ onSubmit }) {
     maxBudget: "",
     region: "",
     pricing: "hourly", // Changed default from "min" to "hourly"
+    operatingSystem: "", // Added operating system field
   });
 
   const handleChange = (e) => {
@@ -225,6 +226,29 @@ export default function WorkloadForm({ onSubmit }) {
                   {country}
                 </option>
               ))}
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="operatingSystem"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Operating System <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="operatingSystem"
+              name="operatingSystem"
+              value={formData.operatingSystem}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="" disabled>
+                Select an operating system
+              </option>
+              <option value="linux">Linux</option>
+              <option value="windows">Windows</option>
             </select>
           </div>
         </div>
