@@ -64,7 +64,7 @@ const fetchRecommendations = async (formData) => {
         "Latest generation GPU with exceptional performance for the most demanding AI workloads.",
       pricing: {
         onDemand: 5.8,
-        spot: 2.1,
+        spot: 0,
         monthly: 3200,
       },
     },

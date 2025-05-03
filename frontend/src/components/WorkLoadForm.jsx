@@ -59,13 +59,13 @@ export default function WorkloadForm({ onSubmit }) {
               <option value="" disabled>
                 Select a task type
               </option>
-              <option value="computer_vision">Computer Vision</option>
-              <option value="nlp">Natural Language Processing</option>
-              <option value="recommendation">Recommendation Systems</option>
-              <option value="generative_ai">Generative AI</option>
-              <option value="reinforcement_learning">
-                Reinforcement Learning
+              <option value="ml_dl">Machine Learning and Deep Learning</option>
+              <option value="gaming">Gaming</option>
+              <option value="hpc">High-Performance Computing (HPC)</option>
+              <option value="data_processing">
+                Data Processing and Analytics
               </option>
+              <option value="rendering">Rendering and Video Processing</option>
             </select>
           </div>
 
@@ -132,9 +132,7 @@ export default function WorkloadForm({ onSubmit }) {
           </div>
 
           <div>
-            <label
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Budget (USD)
             </label>
             <div className="flex space-x-4">
