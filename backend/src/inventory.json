@@ -1,5 +1,4 @@
-{
-    "gpus": [
+[
       {
         "model": "RTX 8000",
         "target_audience": "1st Ray tracing GPU",
@@ -827,5 +826,4 @@
         "power_connector": "8-pin auxiliary power connector"
       }
     ]
-}
 

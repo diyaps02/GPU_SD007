@@ -10,6 +10,6 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 export const config = {
     port: process.env.PORT || 3000,
-    
+    api_url: process.env.API_URL || 'https://api.example.com',
   
 };
