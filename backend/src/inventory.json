@@ -1,0 +1,831 @@
+{
+    "gpus": [
+      {
+        "model": "RTX 8000",
+        "target_audience": "1st Ray tracing GPU",
+        "price": 4000,
+        "memory": {
+          "capacity": "48 GB",
+          "type": "GDDR6",
+          "bus_width": "384-bit",
+          "bandwidth": 672,
+          "clock": 6251
+        },
+        "gpu": "GA102-890",
+        "clock_speed": {
+          "base": null,
+          "boost": null
+        },
+        "cores": {
+          "cuda": 4608,
+          "tensor": 576,
+          "rt": 72
+        },
+        "performance": {
+          "tensor": "119.4 TFLOPS",
+          "double_precision": {
+            "fp64": 5.2,
+            "fp64_tensor_core": 10.3
+          },
+          "fp32": "14.9 TFLOPS",
+          "tf32": {
+            "base": 9,
+            "tensor_core": 18
+          },
+          "fp16_tensor_core": {
+            "base": 18,
+            "tensor_core": 36
+          },
+          "fp8": null,
+          "int8_int4": {
+            "base": 36,
+            "tensor_core": 144
+          },
+          "rt_core": null
+        },
+        "media": {
+          "encoders": 1,
+          "decoders": 1
+        },
+        "specialty": "1st Ray tracing GPU",
+        "architecture": "Turing",
+        "series": "Quadro",
+        "cooling": "Active",
+        "power_consumption": "250W [260-295W]",
+        "capabilities": {
+          "ray_tracing": "DESCENT",
+          "ai": "LOW",
+          "ml_training": "LOW",
+          "rendering": "LOW"
+        },
+        "multi_instance_support": "NA",
+        "nvlink": "Connects 2 at 100 GB/s bi-directional",
+        "id": "10DE:1E78:10DE:13D8",
+        "form_factor": "4.4\" H x 10.5\" L, FHFL, DW",
+        "interface": "PCIe 3.0x16",
+        "power_connector": "8-pin auxiliary power connector"
+      },
+      {
+        "model": "A2",
+        "target_audience": "Edge / Entry Level AI Inference",
+        "price": 1400,
+        "memory": {
+          "capacity": "16GB",
+          "type": "GDDR6",
+          "bus_width": "128-bit",
+          "bandwidth": 200,
+          "clock": 6251
+        },
+        "gpu": "GA102-895",
+        "clock_speed": {
+          "base": 1440,
+          "boost": 1770
+        },
+        "cores": {
+          "cuda": 1280,
+          "tensor": 40,
+          "rt": 10
+        },
+        "performance": {
+          "tensor": null,
+          "double_precision": null,
+          "fp32": "4.5 TFLOPS",
+          "tf32": null,
+          "fp16_tensor_core": null,
+          "fp8": null,
+          "int8_int4": {
+            "base": 72,
+            "tensor_core": 144
+          },
+          "rt_core": null
+        },
+        "media": {
+          "encoders": 1,
+          "decoders": 2
+        },
+        "specialty": null,
+        "architecture": "Ampere",
+        "series": "Tesla",
+        "cooling": "Passive",
+        "power_consumption": "40-60W",
+        "capabilities": {
+          "ray_tracing": "LOW",
+          "ai": "LOW",
+          "ml_training": "LOW",
+          "rendering": "LOW"
+        },
+        "multi_instance_support": "NA",
+        "nvlink": "NA",
+        "id": "10DE:25B6:10DE:157E",
+        "form_factor": "HHHL, SW, (LP)",
+        "interface": "PCIe 4.0 x8, x4; 3.0 x8",
+        "power_connector": null
+      },
+      {
+        "model": "A10",
+        "target_audience": "Analytics",
+        "price": null,
+        "memory": {
+          "capacity": "24GB",
+          "type": "GDDR6",
+          "bus_width": "384-bit",
+          "bandwidth": 600,
+          "clock": null
+        },
+        "gpu": "GA100-893FF, GA100-893FFF, GA100-893HH, GA100-893HHH",
+        "clock_speed": {
+          "base": 885,
+          "boost": 1695
+        },
+        "cores": {
+          "cuda": "3rd gen",
+          "tensor": "Gen 3",
+          "rt": null
+        },
+        "performance": {
+          "tensor": null,
+          "double_precision": null,
+          "fp32": "10.3 TFLOPS",
+          "tf32": null,
+          "fp16_tensor_core": null,
+          "fp8": null,
+          "int8_int4": {
+            "base": 330,
+            "tensor_core": 661
+          },
+          "rt_core": null
+        },
+        "media": {
+          "encoders": "NA",
+          "decoders": 4
+        },
+        "specialty": "1 OFA",
+        "architecture": "Ampere",
+        "series": "Tesla",
+        "cooling": "Passive",
+        "power_consumption": "150W",
+        "capabilities": {
+          "ray_tracing": "LOW",
+          "ai": "MEDIUM",
+          "ml_training": "MEDIUM",
+          "rendering": "LOW"
+        },
+        "multi_instance_support": "NA",
+        "nvlink": "NA",
+        "id": "10DE:2236:10DE:1482",
+        "form_factor": "PCIe FHFL, SW",
+        "interface": "PCIe 4.0 x8, x16; 3.0 x 16",
+        "power_connector": "8-pin auxiliary power connector"
+      },
+      {
+        "model": "A30",
+        "target_audience": "AI/HPC",
+        "price": 15000,
+        "memory": {
+          "capacity": "24GB",
+          "type": "HBM2",
+          "bus_width": "3072-bit",
+          "bandwidth": 933,
+          "clock": 1215
+        },
+        "gpu": null,
+        "clock_speed": {
+          "base": 930,
+          "boost": 1440
+        },
+        "cores": {
+          "cuda": 6912,
+          "tensor": 224,
+          "rt": 72
+        },
+        "performance": {
+          "tensor": null,
+          "double_precision": {
+            "fp64": 9.7,
+            "fp64_tensor_core": 19.5
+          },
+          "fp32": "19.5 TFLOPS",
+          "tf32": {
+            "base": 82,
+            "tensor_core": 165
+          },
+          "fp16_tensor_core": {
+            "base": 165,
+            "tensor_core": 330
+          },
+          "fp8": null,
+          "int8_int4": {
+            "base": 661,
+            "tensor_core": 1321
+          },
+          "rt_core": null
+        },
+        "media": {
+          "encoders": "NA",
+          "decoders": 5
+        },
+        "specialty": "1 NVJPEG",
+        "architecture": "Ampere",
+        "series": "Tesla",
+        "cooling": "Passive",
+        "power_consumption": "165W",
+        "capabilities": {
+          "ray_tracing": "GOOD",
+          "ai": "GOOD",
+          "ml_training": "GOOD",
+          "rendering": "GOOD"
+        },
+        "multi_instance_support": "4 MIGs @ 6GB, 2 MIGs @ 12GB, 1 MIGs @ 24GB",
+        "nvlink": "1x 3rd Gen NVLink 200GB/s",
+        "id": "10DE:20B7:10DE:1532",
+        "form_factor": "FHFL, DW",
+        "interface": "PCIe 4.0 x16",
+        "power_connector": "8-pin auxiliary power connector"
+      },
+      {
+        "model": "A40",
+        "target_audience": "Edge / Entry Level for AI and Data analysis",
+        "price": null,
+        "memory": {
+          "capacity": "48GB",
+          "type": null,
+          "bus_width": "384-bit",
+          "bandwidth": 696,
+          "clock": 7251
+        },
+        "gpu": null,
+        "clock_speed": {
+          "base": 1305,
+          "boost": 1740
+        },
+        "cores": {
+          "cuda": 7424,
+          "tensor": 432,
+          "rt": null
+        },
+        "performance": {
+          "tensor": "312 TFLOPS",
+          "double_precision": null,
+          "fp32": "30.3 TFLOPS",
+          "tf32": {
+            "base": 156,
+            "tensor_core": 312
+          },
+          "fp16_tensor_core": {
+            "base": 312,
+            "tensor_core": 624
+          },
+          "fp8": null,
+          "int8_int4": {
+            "base": 624,
+            "tensor_core": 1248
+          },
+          "rt_core": null
+        },
+        "media": {
+          "encoders": 2,
+          "decoders": 4
+        },
+        "specialty": "4 JPEG DEC",
+        "architecture": "Ampere",
+        "series": "Tesla",
+        "cooling": "Passive",
+        "power_consumption": "250W(40GB), 150W-300W(80GB), 400W(SXM)",
+        "capabilities": {
+          "ray_tracing": "MEDIUM",
+          "ai": "MEDIUM",
+          "ml_training": "MEDIUM",
+          "rendering": "MEDIUM"
+        },
+        "multi_instance_support": "Up to 7 GPU instances",
+        "nvlink": "1x 3rd Gen NVLink 112.5 GB/s",
+        "id": "10DE:2235:10DE:145A",
+        "form_factor": "FHFL, DW",
+        "interface": "PCIe 4.0 x16",
+        "power_connector": "8-pin auxiliary power connector"
+      },
+      {
+        "model": "A100",
+        "target_audience": "Generative AI/ LLMs/ Rendering",
+        "price": 50000,
+        "memory": {
+          "capacity": "40/80 GB",
+          "type": "HBM2",
+          "bus_width": "5120-bit",
+          "bandwidth": "1935 | 2039",
+          "clock": 1512
+        },
+        "gpu": null,
+        "clock_speed": {
+          "base": 1065,
+          "boost": 1410
+        },
+        "cores": {
+          "cuda": 18176,
+          "tensor": 240,
+          "rt": 60
+        },
+        "performance": {
+          "tensor": "1,466 TFLOPS",
+          "double_precision": {
+            "fp64": 19.5,
+            "fp64_tensor_core": 19.5
+          },
+          "fp32": "91.6 TFLOPS",
+          "tf32": {
+            "base": 120,
+            "tensor_core": null
+          },
+          "fp16_tensor_core": {
+            "base": 242,
+            "tensor_core": null
+          },
+          "fp8": "485",
+          "int8_int4": {
+            "base": 485,
+            "tensor_core": null
+          },
+          "rt_core": "212 TFLOPS"
+        },
+        "media": {
+          "encoders": 3,
+          "decoders": 3
+        },
+        "specialty": "Transformer Engine",
+        "architecture": "Ada Lovelance",
+        "series": "Tesla",
+        "cooling": null,
+        "power_consumption": "72",
+        "capabilities": {
+          "ray_tracing": "GOOD",
+          "ai": "GOOD",
+          "ml_training": "GOOD",
+          "rendering": "GOOD"
+        },
+        "multi_instance_support": "NA",
+        "nvlink": "3x 3rd Gen NVLink 600GB/s",
+        "id": "80GB - 10DE:20B5:10DE:1533, 40GB - 10DE:20F1:10DE:145F",
+        "form_factor": "4/8 SXM GPUs in NVIDIA HGX™ A100",
+        "interface": "PCIe 4.0 x16",
+        "power_connector": "8-pin auxiliary power connector"
+      },
+      {
+        "model": "L4",
+        "target_audience": null,
+        "price": 1500,
+        "memory": {
+          "capacity": "24GB",
+          "type": "GDDR6",
+          "bus_width": "192-bit",
+          "bandwidth": 300,
+          "clock": 6251
+        },
+        "gpu": null,
+        "clock_speed": {
+          "base": 795,
+          "boost": 2040
+        },
+        "cores": {
+          "cuda": 10752,
+          "tensor": 336,
+          "rt": 84
+        },
+        "performance": {
+          "tensor": "309.7 TFLOPS",
+          "double_precision": {
+            "fp64": 30,
+            "fp64_tensor_core": 60
+          },
+          "fp32": "60 TFLOPS",
+          "tf32": {
+            "base": 183,
+            "tensor_core": 366
+          },
+          "fp16_tensor_core": {
+            "base": 362.05,
+            "tensor_core": 733
+          },
+          "fp8": "733 | 1,466",
+          "int8_int4": {
+            "base": 733,
+            "tensor_core": 1466
+          },
+          "rt_core": "75.6 TFLOPS"
+        },
+        "media": {
+          "encoders": 0,
+          "decoders": 7
+        },
+        "specialty": "7 JPEG DEC",
+        "architecture": "Ada Lovelance",
+        "series": "Tesla",
+        "cooling": "Passive",
+        "power_consumption": "350",
+        "capabilities": {
+          "ray_tracing": "MEDIUM",
+          "ai": "MEDIUM",
+          "ml_training": "MEDIUM",
+          "rendering": "MEDIUM"
+        },
+        "multi_instance_support": null,
+        "nvlink": "NA",
+        "id": "10DE:27B8:10DE:16CA",
+        "form_factor": "PCIe 1-slot low-profile, PCIe (169mm x 69mm)",
+        "interface": "PCIe 4.0 x16, x8; 3.0 x16",
+        "power_connector": null
+      },
+      {
+        "model": "L40s",
+        "target_audience": null,
+        "price": 6000,
+        "memory": {
+          "capacity": "48GB",
+          "type": "GDDR6 with ECC",
+          "bus_width": "384-bit",
+          "bandwidth": 864,
+          "clock": 9001
+        },
+        "gpu": null,
+        "clock_speed": {
+          "base": 1065,
+          "boost": 2520
+        },
+        "cores": {
+          "cuda": 18176,
+          "tensor": 568,
+          "rt": 142
+        },
+        "performance": {
+          "tensor": "1457.0 TFLOPS",
+          "double_precision": {
+            "fp64": 34,
+            "fp64_tensor_core": 67
+          },
+          "fp32": "67 TFLOPS",
+          "tf32": {
+            "base": 989,
+            "tensor_core": null
+          },
+          "fp16_tensor_core": {
+            "base": 1671,
+            "tensor_core": null
+          },
+          "fp8": "3341",
+          "int8_int4": {
+            "base": 3341,
+            "tensor_core": null
+          },
+          "rt_core": "210.6 TFLOPS"
+        },
+        "media": {
+          "encoders": 0,
+          "decoders": 7
+        },
+        "specialty": "7 JPEG DEC",
+        "architecture": "Ada Lovelance",
+        "series": "Tesla",
+        "cooling": "Passive",
+        "power_consumption": "300-350W",
+        "capabilities": {
+          "ray_tracing": "GOOD",
+          "ai": "MEDIUM",
+          "ml_training": "MEDIUM",
+          "rendering": "MEDIUM"
+        },
+        "multi_instance_support": null,
+        "nvlink": "NA",
+        "id": "10DE:26B9:10DE:1851",
+        "form_factor": "FHFL, DW",
+        "interface": "PCIe 4.0 x16; 64GB/s Bi",
+        "power_connector": "16-pin auxiliary power connector"
+      },
+      {
+        "model": "H100 PCIe",
+        "target_audience": null,
+        "price": 3500,
+        "memory": {
+          "capacity": "80GB",
+          "type": "HBM2e",
+          "bus_width": "5120-bit",
+          "bandwidth": 2000,
+          "clock": 1593
+        },
+        "gpu": "GH100-200",
+        "clock_speed": {
+          "base": 1125,
+          "boost": 1755
+        },
+        "cores": {
+          "cuda": 16384,
+          "tensor": 512,
+          "rt": 128
+        },
+        "performance": {
+          "tensor": null,
+          "double_precision": null,
+          "fp32": "38.7 TFLOPS",
+          "tf32": {
+            "base": 835,
+            "tensor_core": null
+          },
+          "fp16_tensor_core": {
+            "base": 1979,
+            "tensor_core": null
+          },
+          "fp8": "3958",
+          "int8_int4": {
+            "base": 3958,
+            "tensor_core": null
+          },
+          "rt_core": null
+        },
+        "media": {
+          "encoders": 0,
+          "decoders": 7
+        },
+        "specialty": "7 JPEG DEC",
+        "architecture": "Hopper",
+        "series": "Tesla",
+        "cooling": "Passive",
+        "power_consumption": "350-400W",
+        "capabilities": {
+          "ray_tracing": "GOOD",
+          "ai": "MEDIUM",
+          "ml_training": "MEDIUM",
+          "rendering": "MEDIUM"
+        },
+        "multi_instance_support": null,
+        "nvlink": "Connects 2 at 112.5 GB/s (bidirectional)",
+        "id": "10DE:2230:10DE:1459",
+        "form_factor": "FHFL, DW",
+        "interface": "PCIe 5.0 x16, x8; 4.0 x16",
+        "power_connector": "16-pin auxiliary power connector"
+      },
+      {
+        "model": "H100 NVL",
+        "target_audience": null,
+        "price": 2500,
+        "memory": {
+          "capacity": "94GB",
+          "type": "HBM2e",
+          "bus_width": null,
+          "bandwidth": 3900,
+          "clock": null
+        },
+        "gpu": null,
+        "clock_speed": {
+          "base": 1410,
+          "boost": null
+        },
+        "cores": {
+          "cuda": null,
+          "tensor": null,
+          "rt": null
+        },
+        "performance": {
+          "tensor": null,
+          "double_precision": null,
+          "fp32": "91.1 TFLOPS",
+          "tf32": null,
+          "fp16_tensor_core": null,
+          "fp8": null,
+          "int8_int4": null,
+          "rt_core": null
+        },
+        "media": {
+          "encoders": 0,
+          "decoders": 7
+        },
+        "specialty": "7 JPEG DEC",
+        "architecture": "Hoppert",
+        "series": "Tesla",
+        "cooling": "Passive",
+        "power_consumption": "700W",
+        "capabilities": {
+          "ray_tracing": null,
+          "ai": null,
+          "ml_training": null,
+          "rendering": null
+        },
+        "multi_instance_support": null,
+        "nvlink": "NA",
+        "id": null,
+        "form_factor": "FHFL, DW",
+        "interface": null,
+        "power_connector": null
+      },
+      {
+        "model": "H100 SXM",
+        "target_audience": null,
+        "price": 1500,
+        "memory": {
+          "capacity": "80GB",
+          "type": "HBM2e",
+          "bus_width": null,
+          "bandwidth": 3350,
+          "clock": null
+        },
+        "gpu": null,
+        "clock_speed": {
+          "base": null,
+          "boost": null
+        },
+        "cores": {
+          "cuda": null,
+          "tensor": null,
+          "rt": null
+        },
+        "performance": {
+          "tensor": null,
+          "double_precision": null,
+          "fp32": null,
+          "tf32": null,
+          "fp16_tensor_core": null,
+          "fp8": null,
+          "int8_int4": null,
+          "rt_core": null
+        },
+        "media": {
+          "encoders": 0,
+          "decoders": 7
+        },
+        "specialty": "7 JPEG DEC",
+        "architecture": "Hopper",
+        "series": "Tesla",
+        "cooling": null,
+        "power_consumption": "300W",
+        "capabilities": {
+          "ray_tracing": null,
+          "ai": null,
+          "ml_training": null,
+          "rendering": null
+        },
+        "multi_instance_support": null,
+        "nvlink": "NA",
+        "id": null,
+        "form_factor": null,
+        "interface": null,
+        "power_connector": null
+      },
+      {
+        "model": "RTX A6000",
+        "target_audience": "Rendering",
+        "price": null,
+        "memory": {
+          "capacity": "48GB",
+          "type": "GDDR6",
+          "bus_width": "384-bit",
+          "bandwidth": 768.0,
+          "clock": null
+        },
+        "gpu": null,
+        "clock_speed": {
+          "base": null,
+          "boost": null
+        },
+        "cores": {
+          "cuda": null,
+          "tensor": null,
+          "rt": null
+        },
+        "performance": {
+          "tensor": null,
+          "double_precision": null,
+          "fp32": null,
+          "tf32": null,
+          "fp16_tensor_core": null,
+          "fp8": null,
+          "int8_int4": null,
+          "rt_core": null
+        },
+        "media": {
+          "encoders": 1,
+          "decoders": 2
+        },
+        "specialty": null,
+        "architecture": "Ampere",
+        "series": "Quadro",
+        "cooling": null,
+        "power_consumption": "300W",
+        "capabilities": {
+          "ray_tracing": null,
+          "ai": null,
+          "ml_training": null,
+          "rendering": null
+        },
+        "multi_instance_support": null,
+        "nvlink": "NA",
+        "id": null,
+        "form_factor": null,
+        "interface": "PCIe 4.0 x16",
+        "power_connector": "8-pin auxiliary power connector"
+      },
+      {
+        "model": "RTX 6000",
+        "target_audience": null,
+        "price": null,
+        "memory": {
+          "capacity": "48GB",
+          "type": "GDDR6",
+          "bus_width": "384-bit",
+          "bandwidth": 768.0,
+          "clock": null
+        },
+        "gpu": null,
+        "clock_speed": {
+          "base": 2175,
+          "boost": null
+        },
+        "cores": {
+          "cuda": null,
+          "tensor": null,
+          "rt": null
+        },
+        "performance": {
+          "tensor": null,
+          "double_precision": null,
+          "fp32": null,
+          "tf32": null,
+          "fp16_tensor_core": null,
+          "fp8": null,
+          "int8_int4": null,
+          "rt_core": null
+        },
+        "media": {
+          "encoders": 3,
+          "decoders": 3
+        },
+        "specialty": null,
+        "architecture": "Ada Lovelance",
+        "series": "Quadro",
+        "cooling": null,
+        "power_consumption": "300 W",
+        "capabilities": {
+          "ray_tracing": null,
+          "ai": null,
+          "ml_training": null,
+          "rendering": null
+        },
+        "multi_instance_support": null,
+        "nvlink": "NA",
+        "id": null,
+        "form_factor": null,
+        "interface": null,
+        "power_connector": null
+      },
+      {
+        "model": "RTX 4090",
+        "target_audience": null,
+        "price": null,
+        "memory": {
+          "capacity": "24GB",
+          "type": "GDDR6",
+          "bus_width": "384 bit",
+          "bandwidth": 1008,
+          "clock": null
+        },
+        "gpu": "Ada",
+        "clock_speed": {
+          "base": 2235,
+          "boost": null
+        },
+        "cores": {
+          "cuda": null,
+          "tensor": null,
+          "rt": null
+        },
+        "performance": {
+          "tensor": null,
+          "double_precision": null,
+          "fp32": "82.58 TFLOPS",
+          "tf32": null,
+          "fp16_tensor_core": null,
+          "fp8": null,
+          "int8_int4": null,
+          "rt_core": null
+        },
+        "media": {
+          "encoders": 2,
+          "decoders": 1
+        },
+        "specialty": null,
+        "architecture": "Ada Lovelance",
+        "series": "Geforce",
+        "cooling": null,
+        "power_consumption": "450W",
+        "capabilities": {
+          "ray_tracing": "GOOD",
+          "ai": "MEDIUM",
+          "ml_training": "MEDIUM",
+          "rendering": "GOOD"
+        },
+        "multi_instance_support": null,
+        "nvlink": null,
+        "id": null,
+        "form_factor": null,
+        "interface": "PCIe 4.0 x16",
+        "power_connector": "8-pin auxiliary power connector"
+      }
+    ]
+}
+
