@@ -1,10 +1,150 @@
 import GpuCard from "./GpuCard";
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 export default function GpuRecommendations({
   recommendations,
   isLoading,
   pricingPreference,
+  searchCriteria, // Add searchCriteria prop to access user's form data
 }) {
+  const [scoredRecommendations, setScoredRecommendations] = useState([]);
+  const [showScoringDetails, setShowScoringDetails] = useState(false);
+  const [noExactMatch, setNoExactMatch] = useState(false);
+
+  // Calculate scores for each GPU based on criteria from the image
+  useEffect(() => {
+    if (recommendations && recommendations.length > 0) {
+      // Flag to check if we have any good matches
+      let hasGoodMatches = false;
+
+      const scored = recommendations.map((gpu) => {
+        // Initialize score
+        let totalScore = 0;
+        const scoring = {
+          modelType: 0,
+          datasetSize: 0,
+          workloadType: 0,
+          budgetFit: 0,
+          regionMatch: 0,
+        };
+
+        // Extract VRAM if available in description
+        let vramSize = 0;
+        if (gpu.gpu_description) {
+          // Try to extract numbers from the description that might represent VRAM
+          const vramMatch = gpu.gpu_description.match(/(\d+)GB/i);
+          if (vramMatch) {
+            vramSize = parseInt(vramMatch[1], 10);
+          }
+        }
+
+        // Model Type score (weight +3)
+        // For GPT/BERT models prioritize higher VRAM
+        if (
+          searchCriteria?.model_type &&
+          ["GPT", "BERT", "LLM", "transformer", "DNN"].some((model) =>
+            searchCriteria.model_type.includes(model)
+          )
+        ) {
+          // Higher score for higher VRAM GPUs
+          if (vramSize >= 80) scoring.modelType = 3;
+          else if (vramSize >= 40) scoring.modelType = 2;
+          else if (vramSize >= 24) scoring.modelType = 1;
+          else if (gpu.is_gpu) scoring.modelType = 0.5; // At least it's a GPU
+        } else if (gpu.is_gpu) {
+          // For other model types, still prefer GPUs but VRAM is less critical
+          scoring.modelType = 1;
+        }
+
+        // Dataset Size score (weight +2)
+        // Larger datasets need more VRAM
+        if (searchCriteria?.dataset_size === "large" && vramSize >= 40) {
+          scoring.datasetSize = 2;
+        } else if (searchCriteria?.dataset_size === "medium" && vramSize >= 16) {
+          scoring.datasetSize = 2;
+        } else if (searchCriteria?.dataset_size === "small" && gpu.is_gpu) {
+          scoring.datasetSize = 2; // Even smaller GPUs are fine for small datasets
+        } else if (gpu.is_gpu) {
+          scoring.datasetSize = 1; // At least it's a GPU
+        }
+
+        // Workload Type score (weight +2)
+        // Training → high VRAM & vCPUs, Inference → optimize for cost & latency
+        if (searchCriteria?.workload_type === "training") {
+          if (gpu.is_gpu && gpu.vcpus >= 16 && vramSize >= 24) {
+            scoring.workloadType = 2; // High vCPUs and VRAM for training
+          } else if (gpu.is_gpu && (gpu.vcpus >= 8 || vramSize >= 16)) {
+            scoring.workloadType = 1; // Modest specs for training
+          }
+        } else if (searchCriteria?.workload_type === "inference") {
+          // For inference, cost is more important than raw power
+          if (gpu.is_gpu && gpu.price_per_hour < 100) {
+            scoring.workloadType = 2; // Cost-effective option
+          } else if (gpu.is_gpu) {
+            scoring.workloadType = 1; // At least it's a GPU
+          }
+        }
+
+        // Budget Fit score (weight +2)
+        // Check if we have a budget in the criteria
+        if (searchCriteria?.budget) {
+          const budgetType = Object.keys(searchCriteria.budget)[0]; // 'hourly' or 'monthly'
+
+          // Get appropriate price field based on budget type
+          const priceField =
+            budgetType === "hourly" ? "price_per_hour" : "price_per_month";
+          const minBudget = searchCriteria.budget[budgetType]?.min || 0;
+          const maxBudget = searchCriteria.budget[budgetType]?.max || Infinity;
+
+          // Convert backend prices (they're in cents or INR)
+          const price = gpu[priceField] / 100;
+
+          if (price >= minBudget && price <= maxBudget) {
+            scoring.budgetFit = 2; // Perfect budget fit
+          } else if (price < minBudget * 0.8 || price > maxBudget * 1.2) {
+            scoring.budgetFit = 0; // Way outside budget
+          } else {
+            scoring.budgetFit = 1; // Close to budget
+          }
+        }
+
+        // Region Match score (weight +1)
+        if (searchCriteria?.region && gpu.region) {
+          if (gpu.region.toLowerCase() === searchCriteria.region.toLowerCase()) {
+            scoring.regionMatch = 1; // Exact region match
+          }
+        }
+
+        // Calculate total score
+        totalScore =
+          scoring.modelType +
+          scoring.datasetSize +
+          scoring.workloadType +
+          scoring.budgetFit +
+          scoring.regionMatch;
+
+        // If total score is good, we have some good matches
+        if (totalScore >= 6) {
+          hasGoodMatches = true;
+        }
+
+        return {
+          ...gpu,
+          score: totalScore,
+          scoring,
+        };
+      });
+
+      // Sort by score (highest first)
+      scored.sort((a, b) => b.score - a.score);
+
+      // Set flag if we don't have good matches
+      setNoExactMatch(!hasGoodMatches);
+
+      setScoredRecommendations(scored);
+    }
+  }, [recommendations, searchCriteria]);
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-12">
@@ -29,16 +169,126 @@ export default function GpuRecommendations({
   return (
     <div>
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
-        Recommended GPUs
+        {noExactMatch ? "Similar GPUs You Might Consider" : "Recommended GPUs"}
       </h2>
 
+      {noExactMatch && (
+        <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <p className="text-yellow-700">
+            <span className="font-medium">
+              No exact match found for your criteria.
+            </span>{" "}
+            We're showing similar options below that might work for your use
+            case.
+          </p>
+        </div>
+      )}
+
+      {/* Scoring explanation section */}
+      <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-lg font-medium text-blue-800">
+            GPU Recommendations Scoring System
+          </h3>
+          <button
+            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            onClick={() => setShowScoringDetails(!showScoringDetails)}
+          >
+            {showScoringDetails ? "Hide Details" : "Show Details"}
+          </button>
+        </div>
+
+        {showScoringDetails && (
+          <div className="mt-3 border-t border-blue-200 pt-3">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-blue-700">
+                  <th className="pb-2">Criteria</th>
+                  <th className="pb-2">Heuristic Logic</th>
+                  <th className="pb-2">Score Weight</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="py-1 text-blue-800">Model Type</td>
+                  <td className="py-1 text-blue-700">
+                    GPT/BERT need more VRAM → prefer GPUs with higher memory
+                  </td>
+                  <td className="py-1 text-blue-800 font-medium">+3</td>
+                </tr>
+                <tr>
+                  <td className="py-1 text-blue-800">Dataset Size</td>
+                  <td className="py-1 text-blue-700">
+                    &gt;50 GB? Prefer GPUs with more VRAM (40GB+)
+                  </td>
+                  <td className="py-1 text-blue-800 font-medium">+2</td>
+                </tr>
+                <tr>
+                  <td className="py-1 text-blue-800">Workload Type</td>
+                  <td className="py-1 text-blue-700">
+                    Training → high VRAM & vCPUs. Inference → optimize for cost
+                    & latency
+                  </td>
+                  <td className="py-1 text-blue-800 font-medium">+2</td>
+                </tr>
+                <tr>
+                  <td className="py-1 text-blue-800">Budget Fit</td>
+                  <td className="py-1 text-blue-700">
+                    Closer to budget limit but not exceeding it
+                  </td>
+                  <td className="py-1 text-blue-800 font-medium">+2</td>
+                </tr>
+                <tr>
+                  <td className="py-1 text-blue-800">Region Match</td>
+                  <td className="py-1 text-blue-700">
+                    Exact region match preferred
+                  </td>
+                  <td className="py-1 text-blue-800 font-medium">+1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {recommendations.map((gpu) => (
-          <GpuCard
-            key={gpu.id}
-            gpu={gpu}
-            pricingPreference={pricingPreference}
-          />
+        {scoredRecommendations.map((gpu, index) => (
+          <div key={index} className="relative">
+            {/* Score badge */}
+            <div className="absolute -top-3 -right-3 bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold z-10 border-2 border-white shadow-md">
+              {gpu.score}
+            </div>
+            <GpuCard
+              gpu={{
+                name: gpu.gpu_description || gpu.resource_name || "GPU Instance",
+                manufacturer: gpu.is_gpu ? "NVIDIA" : "CPU Instance",
+                availability: "Available",
+                specs: {
+                  vCPUs: gpu.vcpus || "N/A",
+                  ram: `${gpu.ram || 0} GB`,
+                  gpuMemory: gpu.gpu_description
+                    ? gpu.gpu_description.includes("-")
+                      ? gpu.gpu_description.split("-")[1]
+                      : gpu.gpu_description
+                    : "N/A",
+                  performance: gpu.is_gpu ? "High" : "Standard",
+                },
+                description: `${gpu.region || "Unknown Region"} - ${
+                  gpu.resource_class || "Standard"
+                } class GPU instance`,
+                pricing: {
+                  onDemand: parseFloat(
+                    (gpu.price_per_hour || 0) / 100
+                  ).toFixed(2),
+                  spot: parseFloat((gpu.price_per_spot || 0) / 100).toFixed(2),
+                  monthly: parseFloat(
+                    (gpu.price_per_month || 0) / 100
+                  ).toFixed(2),
+                },
+              }}
+              pricingPreference={pricingPreference}
+            />
+          </div>
         ))}
       </div>
 
@@ -48,8 +298,10 @@ export default function GpuRecommendations({
         </h3>
         <p className="text-blue-700 text-sm">
           These GPUs are recommended based on your workload requirements,
-          dataset size, and budget constraints. The top recommendation offers
-          the best balance of performance and cost for your specific needs.
+          dataset size, and budget constraints. We've scored each GPU using the
+          criteria shown above, with the highest scoring options at the top. The
+          top recommendation offers the best balance of performance and cost for
+          your specific needs.
         </p>
       </div>
     </div>

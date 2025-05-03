@@ -4,69 +4,72 @@ import { useState } from "react";
 import WorkloadForm from "./components/WorkLoadForm";
 import GpuRecommendations from "./components/GpuRecommendations";
 
-// Mock API call - in a real app, this would be an actual API call
+// Updated fetch function to handle backend data format
 const fetchRecommendations = async (formData) => {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 1500));
 
-  // Mock data
+  // Example of real backend data format based on what was provided
   return [
     {
-      id: 1,
-      name: "NVIDIA A100",
-      manufacturer: "NVIDIA",
-      availability: "Available",
-      specs: {
-        vCPUs: "8",
-        ram: "40 GB",
-        gpuMemory: "80 GB",
-        performance: "312 TFLOPS",
-      },
-      description:
-        "Ideal for large-scale training and inference workloads. Perfect for computer vision and NLP tasks.",
-      pricing: {
-        onDemand: 3.5,
-        spot: 1.2,
-        monthly: 1800,
-      },
+      country: "usa",
+      operating_system: "windows",
+      resource_class: "a100",
+      resource_name: "W.N.A100.96",
+      vcpus: 16,
+      ram: 96,
+      price_per_hour: 224.66,
+      price_per_month: 102500,
+      price_per_spot: 157.262,
+      currency: "INR",
+      is_gpu: 1,
+      is_spot: 0,
+      resource: "instances",
+      resource_type: "gpu",
+      region: "atlanta",
+      flavor_id: "00cc2a6e-80b3-4277-b6da-f825dcc4d111",
+      gpu_description: "1x A100-80GB",
+      is_public: 1,
     },
     {
-      id: 2,
-      name: "NVIDIA T4",
-      manufacturer: "NVIDIA",
-      availability: "Available",
-      specs: {
-        vCPUs: "4",
-        ram: "16 GB",
-        gpuMemory: "16 GB",
-        performance: "65 TFLOPS",
-      },
-      description:
-        "Cost-effective option for inference workloads and smaller training jobs.",
-      pricing: {
-        onDemand: 0.9,
-        spot: 0.35,
-        monthly: 450,
-      },
+      country: "usa",
+      operating_system: "windows",
+      resource_class: "t4",
+      resource_name: "W.N.T4.16",
+      vcpus: 4,
+      ram: 16,
+      price_per_hour: 89.6,
+      price_per_month: 42100,
+      price_per_spot: 58.24,
+      currency: "INR",
+      is_gpu: 1,
+      is_spot: 0,
+      resource: "instances",
+      resource_type: "gpu",
+      region: "atlanta",
+      flavor_id: "9c5e95bc-ab3d-4b13-9d58-f1c2fa7f9cb3",
+      gpu_description: "1x T4-16GB",
+      is_public: 1,
     },
     {
-      id: 3,
-      name: "NVIDIA H100",
-      manufacturer: "NVIDIA",
-      availability: "Limited",
-      specs: {
-        vCPUs: "16",
-        ram: "80 GB",
-        gpuMemory: "80 GB",
-        performance: "500 TFLOPS",
-      },
-      description:
-        "Latest generation GPU with exceptional performance for the most demanding AI workloads.",
-      pricing: {
-        onDemand: 5.8,
-        spot: 0,
-        monthly: 3200,
-      },
+      country: "usa",
+      operating_system: "linux",
+      resource_class: "a6000",
+      resource_name: "L.N.A6000.48",
+      vcpus: 8,
+      ram: 32,
+      price_per_hour: 160.2,
+      price_per_month: 75000,
+      price_per_spot: 112.14,
+      currency: "INR",
+      is_gpu: 1,
+      is_spot: 0,
+      resource: "instances",
+      resource_type: "gpu",
+      region: "new york",
+      flavor_id: "d4f095d8-7a5e-4cf2-b269-dbf3c7a9b8a7",
+      gpu_description: "1x A6000-48GB",
+      is_public: 1,
     },
   ];
 };
@@ -76,11 +79,13 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [pricingPreference, setPricingPreference] = useState("hourly");
+  const [searchCriteria, setSearchCriteria] = useState(null);
 
   const handleFormSubmit = async (formData) => {
     setIsLoading(true);
     setShowRecommendations(true);
     setPricingPreference(formData.pricing);
+    setSearchCriteria(formData); // Store the form data
 
     try {
       const data = await fetchRecommendations(formData);
@@ -116,6 +121,7 @@ export default function App() {
                 recommendations={recommendations}
                 isLoading={isLoading}
                 pricingPreference={pricingPreference}
+                searchCriteria={searchCriteria} // Pass search criteria to component
               />
             )}
           </div>
