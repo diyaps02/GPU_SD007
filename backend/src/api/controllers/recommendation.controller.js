@@ -5,7 +5,7 @@ import { fetchAll, filterGpus,sortGpus } from "../services/recommendation_servic
 
 const getRecommendations = async (req, res)=> {
     try {
-        const { use_case, dataset_size, budget, region, operating_system, resolution, render_time, spot_instance, latency_sensitivity } = req.body;
+        const { use_case, dataset_size, budget, region, operating_system, resolution, render_time, latency_sensitivity } = req.body;
   
         // Apply filters based on user input
         const filters = {
