@@ -4,9 +4,14 @@ import axios from "axios";
 import { config } from "../../config/index.js";
 
 const fetchAll = async (region) => {
-    console.log(config.api_url)
-    const res = await axios.get(`${config.api_url}&region=${region}`)
-    return res;
+    try {
+        console.log(config.api_url)
+        const res = await axios.get(`${config.api_url}&region=${region}`)
+        return res;
+    } catch (error) {
+        console.error("Error fetching GPU data:", error);
+
+    }
         
 }
 function mapDatasetSizeToMemory(datasetSize) {
