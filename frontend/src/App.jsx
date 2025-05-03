@@ -1,13 +1,13 @@
-"use client"
-import React from "react"
-import { useState } from "react"
-import WorkloadForm from "./components/WorkloadForm"
-import GpuRecommendations from "./components/GpuRecommendations"
+"use client";
+import React from "react";
+import { useState } from "react";
+import WorkloadForm from "./components/WorkLoadForm";
+import GpuRecommendations from "./components/GpuRecommendations";
 
 // Mock API call - in a real app, this would be an actual API call
 const fetchRecommendations = async (formData) => {
   // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1500))
+  await new Promise((resolve) => setTimeout(resolve, 1500));
 
   // Mock data
   return [
@@ -22,7 +22,8 @@ const fetchRecommendations = async (formData) => {
         gpuMemory: "80 GB",
         performance: "312 TFLOPS",
       },
-      description: "Ideal for large-scale training and inference workloads. Perfect for computer vision and NLP tasks.",
+      description:
+        "Ideal for large-scale training and inference workloads. Perfect for computer vision and NLP tasks.",
       pricing: {
         onDemand: 3.5,
         spot: 1.2,
@@ -40,7 +41,8 @@ const fetchRecommendations = async (formData) => {
         gpuMemory: "16 GB",
         performance: "65 TFLOPS",
       },
-      description: "Cost-effective option for inference workloads and smaller training jobs.",
+      description:
+        "Cost-effective option for inference workloads and smaller training jobs.",
       pricing: {
         onDemand: 0.9,
         spot: 0.35,
@@ -58,35 +60,38 @@ const fetchRecommendations = async (formData) => {
         gpuMemory: "80 GB",
         performance: "500 TFLOPS",
       },
-      description: "Latest generation GPU with exceptional performance for the most demanding AI workloads.",
+      description:
+        "Latest generation GPU with exceptional performance for the most demanding AI workloads.",
       pricing: {
         onDemand: 5.8,
         spot: 2.1,
         monthly: 3200,
       },
     },
-  ]
-}
+  ];
+};
 
 export default function App() {
-  const [recommendations, setRecommendations] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [showRecommendations, setShowRecommendations] = useState(false)
+  const [recommendations, setRecommendations] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showRecommendations, setShowRecommendations] = useState(false);
+  const [pricingPreference, setPricingPreference] = useState("hourly");
 
   const handleFormSubmit = async (formData) => {
-    setIsLoading(true)
-    setShowRecommendations(true)
+    setIsLoading(true);
+    setShowRecommendations(true);
+    setPricingPreference(formData.pricing);
 
     try {
-      const data = await fetchRecommendations(formData)
-      setRecommendations(data)
+      const data = await fetchRecommendations(formData);
+      setRecommendations(data);
     } catch (error) {
-      console.error("Error fetching recommendations:", error)
+      console.error("Error fetching recommendations:", error);
       // Handle error state here
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -106,10 +111,16 @@ export default function App() {
           </div>
 
           <div className="lg:col-span-2">
-            {showRecommendations && <GpuRecommendations recommendations={recommendations} isLoading={isLoading} />}
+            {showRecommendations && (
+              <GpuRecommendations
+                recommendations={recommendations}
+                isLoading={isLoading}
+                pricingPreference={pricingPreference}
+              />
+            )}
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

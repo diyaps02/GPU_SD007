@@ -5,7 +5,8 @@ const Form = () => {
     taskType: "",
     datasetSize: "",
     operationType: "training",
-    budget: "",
+    minBudget: "",
+    maxBudget: "",
     region: "",
   });
 
@@ -19,15 +20,15 @@ const Form = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate that min budget is less than max budget
+    if (Number(formData.minBudget) > Number(formData.maxBudget)) {
+      alert("Minimum budget cannot be greater than maximum budget");
+      return;
+    }
+
     try {
       // API call to backend would go here
-      const response = await fetch("/api/submit-requirements", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
 
       const data = await response.json();
       console.log("Success:", data);
@@ -142,28 +143,48 @@ const Form = () => {
 
         {/* Budget */}
         <div className="space-y-2">
-          <label
-            htmlFor="budget"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label className="block text-sm font-medium text-gray-700">
             Budget (USD)
           </label>
-          <div className="relative mt-1 rounded-md shadow-sm">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <span className="text-gray-500 sm:text-sm">$</span>
+          <div className="flex space-x-4">
+            <div className="w-1/2">
+              <div className="relative rounded-md shadow-sm">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <span className="text-gray-500 sm:text-sm">$</span>
+                </div>
+                <input
+                  type="number"
+                  id="minBudget"
+                  name="minBudget"
+                  value={formData.minBudget}
+                  onChange={handleChange}
+                  min="0"
+                  step="0.01"
+                  required
+                  className="w-full pl-7 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Minimum"
+                />
+              </div>
             </div>
-            <input
-              type="number"
-              id="budget"
-              name="budget"
-              value={formData.budget}
-              onChange={handleChange}
-              min="0"
-              step="0.01"
-              required
-              className="w-full pl-7 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="0.00"
-            />
+            <div className="w-1/2">
+              <div className="relative rounded-md shadow-sm">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <span className="text-gray-500 sm:text-sm">$</span>
+                </div>
+                <input
+                  type="number"
+                  id="maxBudget"
+                  name="maxBudget"
+                  value={formData.maxBudget}
+                  onChange={handleChange}
+                  min="0"
+                  step="0.01"
+                  required
+                  className="w-full pl-7 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Maximum"
+                />
+              </div>
+            </div>
           </div>
         </div>
 

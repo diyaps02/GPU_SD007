@@ -1,9 +1,18 @@
-"use client"
+"use client";
+import React from "react";
+import { useState, useEffect } from "react";
 
-import { useState } from "react"
+export default function GpuCard({ gpu, pricingPreference }) {
+  const [activeTab, setActiveTab] = useState("onDemand");
 
-export default function GpuCard({ gpu }) {
-  const [activeTab, setActiveTab] = useState("onDemand")
+  // Set active tab based on pricing preference
+  useEffect(() => {
+    if (pricingPreference === "monthly") {
+      setActiveTab("monthly");
+    } else {
+      setActiveTab("onDemand");
+    }
+  }, [pricingPreference]);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
@@ -55,7 +64,9 @@ export default function GpuCard({ gpu }) {
             </button>
             <button
               className={`py-2 px-4 text-sm font-medium ${
-                activeTab === "spot" ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500 hover:text-gray-700"
+                activeTab === "spot"
+                  ? "text-blue-600 border-b-2 border-blue-600"
+                  : "text-gray-500 hover:text-gray-700"
               }`}
               onClick={() => setActiveTab("spot")}
             >
@@ -77,30 +88,51 @@ export default function GpuCard({ gpu }) {
             {activeTab === "onDemand" && (
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-2xl font-bold text-gray-800">${gpu.pricing.onDemand}/hr</p>
+                  <p className="text-2xl font-bold text-gray-800">
+                    ${gpu.pricing.onDemand}/hr
+                  </p>
                 </div>
-                <div className="text-sm text-gray-500">Est. ${(gpu.pricing.onDemand * 24).toFixed(2)}/day</div>
+                <div className="text-sm text-gray-500">
+                  Est. ${(gpu.pricing.onDemand * 24).toFixed(2)}/day
+                </div>
               </div>
             )}
 
             {activeTab === "spot" && (
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-2xl font-bold text-gray-800">${gpu.pricing.spot}/hr</p>
+                  <p className="text-2xl font-bold text-gray-800">
+                    ${gpu.pricing.spot}/hr
+                  </p>
                   <p className="text-xs text-green-600">
-                    Save {Math.round((1 - gpu.pricing.spot / gpu.pricing.onDemand) * 100)}%
+                    Save{" "}
+                    {Math.round(
+                      (1 - gpu.pricing.spot / gpu.pricing.onDemand) * 100
+                    )}
+                    %
                   </p>
                 </div>
-                <div className="text-sm text-gray-500">Est. ${(gpu.pricing.spot * 24).toFixed(2)}/day</div>
+                <div className="text-sm text-gray-500">
+                  Est. ${(gpu.pricing.spot * 24).toFixed(2)}/day
+                </div>
               </div>
             )}
 
             {activeTab === "monthly" && (
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-2xl font-bold text-gray-800">${gpu.pricing.monthly}/mo</p>
+                  <p className="text-2xl font-bold text-gray-800">
+                    ${gpu.pricing.monthly}/mo
+                  </p>
                   <p className="text-xs text-green-600">
-                    Save {Math.round((1 - gpu.pricing.monthly / (gpu.pricing.onDemand * 24 * 30)) * 100)}%
+                    Save{" "}
+                    {Math.round(
+                      (1 -
+                        gpu.pricing.monthly /
+                          (gpu.pricing.onDemand * 24 * 30)) *
+                        100
+                    )}
+                    %
                   </p>
                 </div>
                 <div className="text-sm text-gray-500">Reserved capacity</div>
@@ -122,5 +154,5 @@ export default function GpuCard({ gpu }) {
         )}
       </div>
     </div>
-  )
+  );
 }

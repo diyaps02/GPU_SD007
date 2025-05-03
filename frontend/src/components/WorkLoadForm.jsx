@@ -1,37 +1,51 @@
-"use client"
-import React from "react"
-import { useState } from "react"
+"use client";
+import React from "react";
+import { useState } from "react";
 
 export default function WorkloadForm({ onSubmit }) {
   const [formData, setFormData] = useState({
     taskType: "",
     datasetSize: "",
     workloadType: "training",
-    budget: "",
+    minBudget: "",
+    maxBudget: "",
     region: "",
-  })
+    pricing: "hourly", // Changed default from "min" to "hourly"
+  });
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    onSubmit(formData)
-  }
+    e.preventDefault();
+
+    // Validate that min budget is less than max budget
+    if (Number(formData.minBudget) > Number(formData.maxBudget)) {
+      alert("Minimum budget cannot be greater than maximum budget");
+      return;
+    }
+
+    onSubmit(formData);
+  };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Find Your Ideal GPU</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        Find Your Ideal GPU
+      </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-4">
           <div>
-            <label htmlFor="taskType" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="taskType"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               AI/ML Task Type
             </label>
             <select
@@ -49,12 +63,17 @@ export default function WorkloadForm({ onSubmit }) {
               <option value="nlp">Natural Language Processing</option>
               <option value="recommendation">Recommendation Systems</option>
               <option value="generative_ai">Generative AI</option>
-              <option value="reinforcement_learning">Reinforcement Learning</option>
+              <option value="reinforcement_learning">
+                Reinforcement Learning
+              </option>
             </select>
           </div>
 
           <div>
-            <label htmlFor="datasetSize" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="datasetSize"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Dataset Size (GB)
             </label>
             <input
@@ -71,7 +90,9 @@ export default function WorkloadForm({ onSubmit }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Workload Type</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Workload Type
+            </label>
             <div className="flex space-x-4">
               <div className="flex items-center">
                 <input
@@ -83,7 +104,10 @@ export default function WorkloadForm({ onSubmit }) {
                   onChange={handleChange}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
-                <label htmlFor="training" className="ml-2 text-sm text-gray-700">
+                <label
+                  htmlFor="training"
+                  className="ml-2 text-sm text-gray-700"
+                >
                   Training
                 </label>
               </div>
@@ -97,7 +121,10 @@ export default function WorkloadForm({ onSubmit }) {
                   onChange={handleChange}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
-                <label htmlFor="inference" className="ml-2 text-sm text-gray-700">
+                <label
+                  htmlFor="inference"
+                  className="ml-2 text-sm text-gray-700"
+                >
                   Inference
                 </label>
               </div>
@@ -105,24 +132,82 @@ export default function WorkloadForm({ onSubmit }) {
           </div>
 
           <div>
-            <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Budget (USD)
             </label>
-            <input
-              type="number"
-              id="budget"
-              name="budget"
-              value={formData.budget}
-              onChange={handleChange}
-              min="0"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter your budget"
-            />
+            <div className="flex space-x-4">
+              <div className="w-1/2">
+                <input
+                  type="number"
+                  id="minBudget"
+                  name="minBudget"
+                  value={formData.minBudget}
+                  onChange={handleChange}
+                  min="0"
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Minimum"
+                />
+              </div>
+              <div className="w-1/2">
+                <input
+                  type="number"
+                  id="maxBudget"
+                  name="maxBudget"
+                  value={formData.maxBudget}
+                  onChange={handleChange}
+                  min="0"
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Maximum"
+                />
+              </div>
+            </div>
           </div>
 
           <div>
-            <label htmlFor="region" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Pricing
+            </label>
+            <div className="flex space-x-4">
+              <div className="flex items-center">
+                <input
+                  id="hourly"
+                  name="pricing"
+                  type="radio"
+                  value="hourly"
+                  checked={formData.pricing === "hourly"}
+                  onChange={handleChange}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                />
+                <label htmlFor="hourly" className="ml-2 text-sm text-gray-700">
+                  Per Hour
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="monthly"
+                  name="pricing"
+                  type="radio"
+                  value="monthly"
+                  checked={formData.pricing === "monthly"}
+                  onChange={handleChange}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                />
+                <label htmlFor="monthly" className="ml-2 text-sm text-gray-700">
+                  Monthly
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="region"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Preferred Region
             </label>
             <select
@@ -155,5 +240,5 @@ export default function WorkloadForm({ onSubmit }) {
         </div>
       </form>
     </div>
-  )
+  );
 }
