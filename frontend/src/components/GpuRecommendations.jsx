@@ -1,3 +1,4 @@
+import React from "react"
 import GpuCard from "./GpuCard"
 
 export default function GpuRecommendations({ recommendations, isLoading }) {

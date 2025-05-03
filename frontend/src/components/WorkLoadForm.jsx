@@ -1,6 +1,6 @@
-"use client"
-import React from "react"
-import { useState } from "react"
+"use client";
+import React from "react";
+import { useState } from "react";
 
 export default function WorkloadForm({ onSubmit }) {
   const [formData, setFormData] = useState({
@@ -9,30 +9,35 @@ export default function WorkloadForm({ onSubmit }) {
     workloadType: "training",
     budget: "",
     region: "",
-  })
+  });
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    onSubmit(formData)
-  }
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Find Your Ideal GPU</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        Find Your Ideal GPU
+      </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-4">
           <div>
-            <label htmlFor="taskType" className="block text-sm font-medium text-gray-700 mb-1">
-              AI/ML Task Type
+            <label
+              htmlFor="taskType"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Task Type
             </label>
             <select
               id="taskType"
@@ -45,16 +50,21 @@ export default function WorkloadForm({ onSubmit }) {
               <option value="" disabled>
                 Select a task type
               </option>
-              <option value="computer_vision">Computer Vision</option>
-              <option value="nlp">Natural Language Processing</option>
-              <option value="recommendation">Recommendation Systems</option>
-              <option value="generative_ai">Generative AI</option>
-              <option value="reinforcement_learning">Reinforcement Learning</option>
+              <option value="ml_dl">Machine Learning and Deep Learning</option>
+              <option value="gaming">Gaming</option>
+              <option value="hpc">High-Performance Computing (HPC)</option>
+              <option value="data_processing">
+                Data Processing and Analytics
+              </option>
+              <option value="rendering">Rendering and Video Processing</option>
             </select>
           </div>
 
           <div>
-            <label htmlFor="datasetSize" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="datasetSize"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Dataset Size (GB)
             </label>
             <input
@@ -71,7 +81,9 @@ export default function WorkloadForm({ onSubmit }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Workload Type</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Workload Type
+            </label>
             <div className="flex space-x-4">
               <div className="flex items-center">
                 <input
@@ -83,7 +95,10 @@ export default function WorkloadForm({ onSubmit }) {
                   onChange={handleChange}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
-                <label htmlFor="training" className="ml-2 text-sm text-gray-700">
+                <label
+                  htmlFor="training"
+                  className="ml-2 text-sm text-gray-700"
+                >
                   Training
                 </label>
               </div>
@@ -97,7 +112,10 @@ export default function WorkloadForm({ onSubmit }) {
                   onChange={handleChange}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
-                <label htmlFor="inference" className="ml-2 text-sm text-gray-700">
+                <label
+                  htmlFor="inference"
+                  className="ml-2 text-sm text-gray-700"
+                >
                   Inference
                 </label>
               </div>
@@ -105,7 +123,10 @@ export default function WorkloadForm({ onSubmit }) {
           </div>
 
           <div>
-            <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="budget"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Budget (USD)
             </label>
             <input
@@ -122,7 +143,10 @@ export default function WorkloadForm({ onSubmit }) {
           </div>
 
           <div>
-            <label htmlFor="region" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="region"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Preferred Region
             </label>
             <select
@@ -155,5 +179,5 @@ export default function WorkloadForm({ onSubmit }) {
         </div>
       </form>
     </div>
-  )
+  );
 }
