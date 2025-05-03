@@ -1,7 +1,8 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import GpuCard from "./GpuCard";
-import { useState, useEffect } from "react";
+import Pagination from "./Pagination";
+import { usePagination } from "./PaginationContext";
 
 export default function GpuRecommendations({
   recommendations,
@@ -9,9 +10,11 @@ export default function GpuRecommendations({
   pricingPreference,
   searchCriteria,
 }) {
+  const { currentPage, itemsPerPage } = usePagination();
   const [scoredRecommendations, setScoredRecommendations] = useState([]);
   const [showScoringDetails, setShowScoringDetails] = useState(false);
   const [noExactMatch, setNoExactMatch] = useState(false);
+  const [paginatedGpus, setPaginatedGpus] = useState([]);
 
   // Calculate scores for each GPU based on criteria
   useEffect(() => {
@@ -158,6 +161,13 @@ export default function GpuRecommendations({
     }
   }, [recommendations, searchCriteria]);
 
+  // Handle pagination
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    setPaginatedGpus(scoredRecommendations.slice(startIndex, endIndex));
+  }, [currentPage, itemsPerPage, scoredRecommendations]);
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-12">
@@ -265,7 +275,7 @@ export default function GpuRecommendations({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {scoredRecommendations.map((gpu, index) => (
+        {paginatedGpus.map((gpu, index) => (
           <div key={index} className="relative">
             {/* Score badge */}
             <div className="absolute -top-3 -right-3 bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold z-10 border-2 border-white shadow-md">
@@ -275,6 +285,8 @@ export default function GpuRecommendations({
           </div>
         ))}
       </div>
+
+      <Pagination totalItems={scoredRecommendations.length} />
 
       <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h3 className="text-lg font-medium text-blue-800 mb-2">
