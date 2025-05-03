@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useState } from "react";
+import countries from "../utils/countries";
 
 export default function WorkloadForm({ onSubmit }) {
   const [formData, setFormData] = useState({
@@ -46,7 +47,7 @@ export default function WorkloadForm({ onSubmit }) {
               htmlFor="taskType"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              AI/ML Task Type
+             Task Type <span className="text-red-500">*</span>
             </label>
             <select
               id="taskType"
@@ -74,7 +75,7 @@ export default function WorkloadForm({ onSubmit }) {
               htmlFor="datasetSize"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Dataset Size (GB)
+              Dataset Size (GB) <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
@@ -91,7 +92,7 @@ export default function WorkloadForm({ onSubmit }) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Workload Type
+              Workload Type <span className="text-red-500">*</span>
             </label>
             <div className="flex space-x-4">
               <div className="flex items-center">
@@ -133,7 +134,7 @@ export default function WorkloadForm({ onSubmit }) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Budget (USD)
+              Budget (USD) <span className="text-red-500">*</span>
             </label>
             <div className="flex space-x-4">
               <div className="w-1/2">
@@ -167,7 +168,7 @@ export default function WorkloadForm({ onSubmit }) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Pricing
+              Pricing <span className="text-red-500">*</span>
             </label>
             <div className="flex space-x-4">
               <div className="flex items-center">
@@ -206,7 +207,7 @@ export default function WorkloadForm({ onSubmit }) {
               htmlFor="region"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Preferred Region
+              Preferred Region <span className="text-red-500">*</span>
             </label>
             <select
               id="region"
@@ -217,13 +218,13 @@ export default function WorkloadForm({ onSubmit }) {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="" disabled>
-                Select a region
+                Select a country
               </option>
-              <option value="us-east">US East</option>
-              <option value="us-west">US West</option>
-              <option value="eu-central">EU Central</option>
-              <option value="ap-southeast">Asia Pacific</option>
-              <option value="sa-east">South America</option>
+              {countries.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
             </select>
           </div>
         </div>
