@@ -1,4 +1,4 @@
-"use client";
+
 import React , { useState, useEffect } from "react";
 
 export default function GpuCard({ gpu, pricingPreference }) {

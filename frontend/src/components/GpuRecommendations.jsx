@@ -1,4 +1,4 @@
-"use client";
+
 import React, { useState, useEffect } from "react";
 import GpuCard from "./GpuCard";
 import Pagination from "./Pagination";
