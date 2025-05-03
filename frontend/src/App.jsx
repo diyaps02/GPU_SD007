@@ -10,7 +10,7 @@ const fetchRecommendations = async (formData) => {
   try {
     // console.log(formData);
     const response = await axios.post(
-      "http://localhost:3000/recommend-gpu",
+      "http://localhost:3000/api/v1/recommend-gpu",
       formData
     );
     console.log(response);
